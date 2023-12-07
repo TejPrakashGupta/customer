@@ -7,21 +7,24 @@ import '../node_modules/font-awesome/css/font-awesome.min.css';
 import '../styles/globals.css'
 import '../styles/App.css'
 import '../styles/Login.css'
-
-
 import { ToastContainer, toast } from 'react-toastify';
-
 import axios from 'axios';
+import config from '../config';
+import getConfig from 'next/config';
 
 const app = {};
+const { publicRuntimeConfig } = getConfig();
+// const apiUrl = publicRuntimeConfig.apiUrl;
+// app.baseURL = 'http://rms.softreader.in:5000/api'
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com';
 
-app.baseURL = 'http://rms.softreader.in:5000/api'
-
+console.log(apiUrl);
 
 var _token = '';
 if(typeof window !== 'undefined') 
 _token =  sessionStorage.getItem('rms_token')
 
+console.log(config.apiUrl);
 
 app.toast = (msg,type='default')=> {
   const config = {autoClose:1500,position: toast.POSITION.BOTTOM_CENTER,hideProgressBar:true,type};
@@ -42,7 +45,7 @@ app.get = async (url,callback=function(){})=>{
     } 
   } 
     var data = {};
-    await axios.get(`${app.baseURL}${url}`,config)
+    await axios.get(`${apiUrl}${url}`,config)
       .then(res => {
         data = res.data;
         callback(null,data)
@@ -63,7 +66,7 @@ app.post = async (url,body,callback=function(){})=>{
   }
 
     var data = {};
-    await axios.post(`${app.baseURL}${url}`,body,config)
+    await axios.post(`${apiUrl}${url}`,body,config)
       .then(res => {
         data = res.data;
         callback(null,data)
@@ -83,7 +86,7 @@ app.put = async (url,body,callback=function(){})=>{
   }
 
     var data = {};
-    await axios.put(`${app.baseURL}${url}`,body,config)
+    await axios.put(`${apiUrl}${url}`,body,config)
       .then(res => {
         data = res.data;
         callback(null,data)
@@ -102,7 +105,7 @@ app.delete = async (url,body,callback=function(){})=>{
     
 
     var data = {};
-    await axios.delete(`${app.baseURL}${url}`, {data:body, headers})
+    await axios.delete(`${apiUrl}${url}`, {data:body, headers})
       .then(res => {
         data = res.data;
         callback(null,data)
